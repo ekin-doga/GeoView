@@ -21,17 +21,14 @@ cfg.stimuli_dir       = fullfile(cfg.experiment_root, 'Stimuli');
 cfg.participants_dir  = fullfile(cfg.experiment_root, 'Participants');
 
 % Stimulus database (same pool as original experiment)
-cfg.path_to_table    = fullfile(cfg.stimuli_dir, 'stimuli_experiment_22_per_bin.csv');
+cfg.path_to_table    = fullfile(cfg.stimuli_dir, 'stimuli_overlap_Ekin_140_5perbin.csv');
 cfg.stimuli_subfolder = 'stimuli_all';
 
 % Attention-check images (Set 2) — 3 bathroom images, manually chosen
 cfg.attn_check_images = {
-    '99-films-9K-rMgWLCYM-unsplash_resized.jpg',
-    'alex-tyson-trSptCbWxAo-unsplash_resized.jpg',
-    'alexander-fife-6fWlqSqzWus-unsplash_resized.jpg'
-};
-cfg.attn_check_category = 'Bathroom';
-cfg.attn_check_subfolder = 'stimuli_practise';  % lives in Stimuli/stimuli_practise/Bathroom/
+    'img_nr8nj.png', 'img_zvi2m.png', 'img_0kqc0.png'};
+cfg.attn_check_category = 'Attention';
+cfg.attn_check_subfolder = 'stimuli_all';  % lives in Stimuli/stimuli_practise/Bathroom/
 
 %% Experiment settings
 
@@ -72,18 +69,25 @@ cfg.keys.Quit     = KbName('ESCAPE');
 cfg.keys.respond  = KbName('space');  % press space to indicate repeating image
 
 %% Trigger settings
-cfg.triggers.enabled       = false;
-cfg.triggers.block_text    = 1;
-cfg.triggers.key_press     = 2;
-cfg.triggers.fix_onset     = 3;
-cfg.triggers.answer_screen = 4;
-cfg.triggers.answer_M      = 10;
-cfg.triggers.answer_H      = 11;
-cfg.triggers.answer_FA     = 20;
-cfg.triggers.answer_CR     = 21;
-cfg.triggers.ESC           = 5;
-cfg.triggers.experiment_start = 6;
-cfg.triggers.experiment_end   = 7;
+cfg.triggers.enabled          = false;
+
+% Event triggers
+cfg.triggers.experiment_start = 1;
+cfg.triggers.experiment_end   = 2;
+cfg.triggers.block_text       = 3;
+cfg.triggers.key_press        = 4;
+cfg.triggers.ESC              = 5;
+cfg.triggers.fix_onset        = 6;
+
+% Stimulus triggers: category_base + typicality_bin (1-10)
+%   Bedrooms:     11-20
+%   Kitchens:     21-30
+%   Living rooms: 31-40
+%   Attn check:   50
+cfg.triggers.base_bedrooms    = 10;
+cfg.triggers.base_kitchens    = 20;
+cfg.triggers.base_livingrooms = 30;
+cfg.triggers.attn_check       = 50;
 
 %% Participant seed
 if nargin >= 1 && ~isempty(participant_id)

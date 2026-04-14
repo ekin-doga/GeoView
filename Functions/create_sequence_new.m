@@ -18,6 +18,12 @@ function [all_trials] = create_sequence_new(set1, set2, cfg)
 %   all_trials - Trial table with columns:
 %     trial, block, im_idx, image_id, category, stimulus, p_typicality,
 %     is_attn_check, presentation, ISI, trigger_id
+%
+% TRIGGER ID ENCODING:
+%   Bedrooms bin 1-10:     11-20
+%   Kitchens bin 1-10:     21-30
+%   Living rooms bin 1-10: 31-40
+%   Attention check:       50
 
 rng(cfg.seed + 1);  % Offset seed from selection seed
 
@@ -121,29 +127,29 @@ isi_idx = randi(length(cfg.ISI_vals), n_total, 1);
 all_trials.ISI = cfg.ISI_vals(isi_idx)';
 
 %% --- Assign trigger IDs ---
-% Encoding: [presentation_flag][category_code][image_type]
-%   presentation: 1=new, 2=old (repeat)
-%   category:     1=bedrooms, 2=kitchens, 3=living_rooms, 4=attention_check
-%   image_type:   1=set1, 2=attention_check
+% Encoding: category_base + typicality_bin
+%   Bedrooms:     10 + bin  →  11-20
+%   Kitchens:     20 + bin  →  21-30
+%   Living rooms: 30 + bin  →  31-40
+%   Attn check:   50
 
-cat_map = containers.Map(...
-    {'bedrooms','kitchens','living_rooms', 'Bathroom'}, ...
-    {1, 2, 3, 4});
+cat_base_map = containers.Map(...
+    {'bedrooms', 'kitchens', 'living_rooms'}, ...
+    {cfg.triggers.base_bedrooms, cfg.triggers.base_kitchens, cfg.triggers.base_livingrooms});
 
 all_trials.trigger_id = zeros(height(all_trials), 1);
 
 for i = 1:height(all_trials)
-    if iscell(all_trials.category)
-        cat_name = all_trials.category{i};
+    if all_trials.is_attn_check(i)
+        all_trials.trigger_id(i) = cfg.triggers.attn_check;
     else
-        cat_name = char(all_trials.category(i));
+        if iscell(all_trials.category)
+            cat_name = all_trials.category{i};
+        else
+            cat_name = char(all_trials.category(i));
+        end
+        all_trials.trigger_id(i) = cat_base_map(cat_name) + all_trials.p_typicality(i);
     end
-
-    pres_code = min(all_trials.presentation(i), 2);  % cap at 2 for trigger
-    cat_code  = cat_map(cat_name);
-    type_code = 1 + all_trials.is_attn_check(i);     % 1=set1, 2=attn
-
-    all_trials.trigger_id(i) = pres_code * 100 + cat_code * 10 + type_code;
 end
 
 fprintf('Sequence generated: %d total trials across %d block(s)\n', ...

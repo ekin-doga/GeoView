@@ -57,6 +57,13 @@ for c = 1:n_categories
         selected_idx = randperm(height(images_bin), n_needed);
         selected = images_bin(selected_idx, :);
 
+        % Extract bare filename from stimulus path
+        % e.g. 'stimuli/bedroom/img_c2pbs.png' → 'img_c2pbs.png'
+        for s = 1:height(selected)
+            [~, fname, ext] = fileparts(selected.stimulus{s});
+            selected.stimulus{s} = [fname, ext];
+        end
+
         % All images appear in every block (no block label needed)
         selected.block = zeros(n_needed, 1);
 

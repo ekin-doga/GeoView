@@ -1,0 +1,29 @@
+====================================================
+ GEO_View Experiment — Trigger Code Reference
+====================================================
+
+EVENT TRIGGERS
+--------------
+ 1   Experiment start
+ 2   Experiment end
+ 3   Block text / break screen onset
+ 4   Key press (spacebar)
+ 5   ESC (experiment terminated by user)
+ 6   Fixation onset
+
+STIMULUS TRIGGERS
+-----------------
+Encoding: category_base + typicality_bin (1–10)
+
+ Bedrooms      (base 10):   11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+ Kitchens      (base 20):   21, 22, 23, 24, 25, 26, 27, 28, 29, 30
+ Living rooms  (base 30):   31, 32, 33, 34, 35, 36, 37, 38, 39, 40
+
+ 50  Attention check (bathroom image)
+
+NOTES
+-----
+- All codes are in the range 1–50 (well within the 0–255 BioSemi limit)
+- Stimulus triggers are sent at image onset, coinciding with Screen('Flip')
+- The trigger_id column in the output CSV matches these codes
+====================================================

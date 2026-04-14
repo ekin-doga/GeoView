@@ -3,6 +3,7 @@ close all; clear; clc; sca;
 
 addpath('Functions/')
 addpath('Participants/')
+addpath(genpath('Stimuli/'))
 
 %----------------------------------------------------------------------
 % Setup new run of the study
@@ -32,7 +33,7 @@ cfg = get_cfg(participant_id);
 %   windowed:      0 = fullscreen, 1 = windowed
 %----------------------------------------------------------------------
 
-[screen_cfg, window] = set_screen(1, 0, cfg.vdist);
+[screen_cfg, window] = set_screen(1, 1, cfg.vdist);
 
 Screen('Preference', 'SkipSyncTests', 1);
 
@@ -89,6 +90,7 @@ try
     % Send experiment-start trigger
     trigger.sendTrigger(cfg.triggers.experiment_start);
     fprintf('Experiment start — trigger %d\n', cfg.triggers.experiment_start);
+
 
     % Show instructions + attention-check images together on one screen
     show_attn_check_demo(window, screen_cfg, cfg, trigger, instructions);
