@@ -19,11 +19,11 @@ function [all_trials] = create_sequence_new(set1, set2, cfg)
 %     trial, block, im_idx, image_id, category, stimulus, p_typicality,
 %     is_attn_check, presentation, ISI, trigger_id
 %
-% TRIGGER ID ENCODING:
-%   Bedrooms bin 1-10:     11-20
-%   Kitchens bin 1-10:     21-30
-%   Living rooms bin 1-10: 31-40
-%   Attention check:       50
+% TRIGGER ID ENCODING (base + 2*typicality_bin, all odd):
+%   Bedrooms bin 1-10:     11, 13, 15, 17, 19, 21, 23, 25, 27, 29
+%   Kitchens bin 1-10:     31, 33, 35, 37, 39, 41, 43, 45, 47, 49
+%   Living rooms bin 1-10: 51, 53, 55, 57, 59, 61, 63, 65, 67, 69
+%   Attention check:       71
 
 rng(cfg.seed + 1);  % Offset seed from selection seed
 
@@ -148,7 +148,7 @@ for i = 1:height(all_trials)
         else
             cat_name = char(all_trials.category(i));
         end
-        all_trials.trigger_id(i) = cat_base_map(cat_name) + all_trials.p_typicality(i);
+        all_trials.trigger_id(i) = cat_base_map(cat_name) + 2 * all_trials.p_typicality(i);
     end
 end
 

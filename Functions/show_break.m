@@ -30,9 +30,6 @@ while true
         pressedKeys = find(keyCode);
         key = pressedKeys(1);
 
-        trigger.sendTrigger(trig_codes.key_press)
-        fprintf('Key pressed — trigger %d\n', trig_codes.key_press)
-
         if key == KbName('ESCAPE')
             trigger.sendTrigger(trig_codes.ESC)
             sca;

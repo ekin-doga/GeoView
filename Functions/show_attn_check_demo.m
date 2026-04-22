@@ -91,8 +91,6 @@ while true
     if keyIsDown
         pressedKeys = find(keyCode);
         key = pressedKeys(1);
-        trigger.sendTrigger(cfg.triggers.key_press);
-        fprintf('Key pressed — trigger %d\n', cfg.triggers.key_press);
         if key == KbName('ESCAPE')
             trigger.sendTrigger(cfg.triggers.ESC);
             sca;

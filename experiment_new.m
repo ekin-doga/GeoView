@@ -9,7 +9,7 @@ addpath(genpath('Stimuli/'))
 % Setup new run of the study
 %----------------------------------------------------------------------
 
-participant_id = 1;   % Change per participant
+participant_id = 10;   % Change per participant
 
 % Set to 1 if the experiment crashed and needs to resume
 crash_restart = 0;
@@ -73,7 +73,7 @@ elseif crash_restart == 1
     load(info_file, 'Info');
 
     start_trial  = Log.lastTrial + 1;
-    instructions = sprintf('Resuming from trial %d.\n\nPress SPACE when you see a repeating image.\n\nPress any key to continue.', start_trial);
+    instructions = sprintf('Fortsetzen ab Durchgang %d.\n\nDrücke die LEERTASTE, wenn du ein wiederholendes Bild siehst.\n\nDrücke eine beliebige Taste, um fortzufahren.', start_trial);
 
     fprintf('Resuming experiment from trial %d\n', start_trial);
 
@@ -89,7 +89,6 @@ try
 
     % Send experiment-start trigger
     trigger.sendTrigger(cfg.triggers.experiment_start);
-    fprintf('Experiment start — trigger %d\n', cfg.triggers.experiment_start);
 
 
     % Show instructions + attention-check images together on one screen
@@ -107,14 +106,21 @@ try
         %% -- Block break (between blocks, not after the last) --
         if trial > 1 && Info.block(trial) ~= Info.block(trial - 1)
             completedBlock = Info.block(trial - 1);
+            fprintf('\n===== BREAK: Block %d complete =====\n\n', completedBlock);
             break_text = sprintf([...
-                'Block %d complete. Take a short break.\n\n' ...
-                'Remember: press SPACE when you see one of these images.'], ...
+                'Block %d abgeschlossen. Mach eine kurze Pause.\n\n' ...
+                'Denke daran: Drücke die LEERTASTE, wenn du eines dieser Bilder siehst.'], ...
                 completedBlock);
             show_attn_check_demo(window, screen_cfg, cfg, trigger, break_text, 'Press SPACE to continue.');
 
             fix_color = [0 0 0];  % Reset feedback color at block boundary
         end
+
+        %% -- Per-trial progress print --
+        current_block   = Info.block(trial);
+        trials_in_block = sum(Info.block == current_block);
+        trial_in_block  = sum(Info.block(1:trial) == current_block);
+        fprintf('Block %d — trial %d / %d\n', current_block, trial_in_block, trials_in_block);
 
         %% -- Fixation (ISI) --
         my_optimal_fixationpoint(window, screen_cfg.center_X, screen_cfg.center_Y, ...
@@ -197,9 +203,8 @@ try
 
     % Send experiment-end trigger
     trigger.sendTrigger(cfg.triggers.experiment_end);
-    fprintf('Experiment end — trigger %d\n', cfg.triggers.experiment_end);
 
-    end_message = 'The experiment is now complete. Thank you! Press any key to exit.';
+    end_message = 'Das Experiment ist nun abgeschlossen. Vielen Dank! Drücke eine beliebige Taste zum Beenden.';
     show_break(window, end_message, cfg.deviceIndex, trigger, cfg.triggers);
 
 catch ME
