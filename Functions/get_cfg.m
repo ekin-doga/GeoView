@@ -41,17 +41,8 @@ cfg.n_set1_per_block  = cfg.n_categories * cfg.n_bins * cfg.n_per_bin;  % 120
 % Set 2: attention-check images
 cfg.n_attn_images     = 3;          % number of distinct attention-check images
 
-% Attention-check target rate: ~10% of total trials per block
-% Total trials = set1 + attn_checks => attn ≈ 10% of total
-%   Let n_set1 = 120, target_rate = 0.10
-%   n_attn / (120 + n_attn) = 0.10  => n_attn ≈ 13.3, round to 13
-cfg.attn_check_rate   = 0.10;       % desired fraction of total trials
-
-% Number of attention-check insertions per block (derived at init time
-% from n_set1_per_block and attn_check_rate — stored here for reference)
-%   n_attn = round(n_set1 * rate / (1 - rate))
-cfg.n_attn_per_block  = round(cfg.n_set1_per_block * cfg.attn_check_rate / ...
-                              (1 - cfg.attn_check_rate));   % ≈ 13
+cfg.attn_check_rate  = 0.10;        % attention checks as fraction of set1 trials
+cfg.n_attn_per_block = round(cfg.n_set1_per_block * cfg.attn_check_rate);  % 15
 
 cfg.n_blocks          = 16;          % number of blocks
 
@@ -69,28 +60,27 @@ cfg.keys.Quit     = KbName('ESCAPE');
 cfg.keys.respond  = KbName('space');  % press space to indicate repeating image
 
 %% Trigger settings
-cfg.triggers.enabled          = true;   % Set to false for debugging (no hardware)
+cfg.triggers.enabled           = true;   % Set to false for debugging (no hardware)
+cfg.triggers.record_responses  = true;   % Set to false to skip key-press triggers
 
-% Event triggers (even numbers — distinct from all stimulus codes)
-cfg.triggers.experiment_start = 2;
-cfg.triggers.experiment_end   = 4;
-cfg.triggers.block_text       = 6;
-cfg.triggers.ESC              = 10;
+% Event triggers
+cfg.triggers.experiment_start = 1;
+cfg.triggers.experiment_end   = 2;
+cfg.triggers.block_text       = 3;
+cfg.triggers.key_press        = 4;
+cfg.triggers.ESC              = 5;
+cfg.triggers.fix_onset        = 6;
 
-% fix_onset = 1 (single LSB). All stimulus codes are odd, so
-% fix_onset OR stim_code = stim_code — smearing produces no spurious value.
-cfg.triggers.fix_onset        = 1;
+% Stimulus triggers: category_base + typicality_bin (bins 1-10)
+%   Bedrooms:     11, 12, 13, 14, 15, 16, 17, 18, 19, 20
+%   Kitchens:     21, 22, 23, 24, 25, 26, 27, 28, 29, 30
+%   Living rooms: 31, 32, 33, 34, 35, 36, 37, 38, 39, 40
+%   Attn check:   50
 
-% Stimulus triggers: category_base + 2*typicality_bin (all odd, bins 1-10)
-%   Bedrooms:     11, 13, 15, 17, 19, 21, 23, 25, 27, 29
-%   Kitchens:     31, 33, 35, 37, 39, 41, 43, 45, 47, 49
-%   Living rooms: 51, 53, 55, 57, 59, 61, 63, 65, 67, 69
-%   Attn check:   71
-
-cfg.triggers.base_bedrooms    = 9;
-cfg.triggers.base_kitchens    = 29;
-cfg.triggers.base_livingrooms = 49;
-cfg.triggers.attn_check       = 71;
+cfg.triggers.base_bedrooms    = 10;
+cfg.triggers.base_kitchens    = 20;
+cfg.triggers.base_livingrooms = 30;
+cfg.triggers.attn_check       = 50;
 
 %% Participant seed
 if nargin >= 1 && ~isempty(participant_id)

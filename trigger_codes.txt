@@ -27,3 +27,8 @@ NOTES
 - Stimulus triggers are sent at image onset, coinciding with Screen('Flip')
 - The trigger_id column in the output CSV matches these codes
 ====================================================
+
+
+
+010111 +  010100
+

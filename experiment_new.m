@@ -129,6 +129,11 @@ try
         vbl = Screen('Flip', window);
         Info.fixation_onset(trial) = vbl;
 
+        % Clear trigger pixel one frame later; fixation remains visible
+        my_optimal_fixationpoint(window, screen_cfg.center_X, screen_cfg.center_Y, ...
+            0.6, fix_color, screen_cfg.white/2, screen_cfg.pixperdeg);
+        Screen('Flip', window);
+
         %% -- Load image --
         if iscell(Info.stimulus)
             stim_path = Info.stimulus{trial};
@@ -187,6 +192,9 @@ try
         % Draw feedback fixation and flip at stimulus offset
         my_optimal_fixationpoint(window, screen_cfg.center_X, screen_cfg.center_Y, ...
             0.6, fix_color, screen_cfg.white/2, screen_cfg.pixperdeg);
+        if pressed && cfg.triggers.record_responses
+            trigger.drawTriggerPixel(cfg.triggers.key_press);
+        end
         Screen('Flip', window, vbl + cfg.stim_dur);
         Info.stim_offset(trial) = vbl + cfg.stim_dur;
 
