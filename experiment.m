@@ -63,7 +63,7 @@ elseif crash_restart == 1
 
     % Resume: reload saved Info and Log
     log_file  = fullfile(participant_dir, ['Log_', num2str(participant_id), '_experiment_.mat']);
-    info_file = fullfile(participant_dir, ['Info_', num2str(participant_id), '.mat']);
+    info_file = fullfile(participant_dir, ['GEO_View_', num2str(participant_id), '.mat']);
 
     if ~isfile(log_file) || ~isfile(info_file)
         error('Cannot resume: log or info file not found in %s', participant_dir);
@@ -87,7 +87,7 @@ end
 try
     vbl = Screen('Flip', window);
 
-    % Send experiment-start trigger
+    % Send experiment-start trigger (fresh start and crash restart)
     trigger.sendTrigger(cfg.triggers.experiment_start);
 
 
@@ -107,11 +107,15 @@ try
         if trial > 1 && Info.block(trial) ~= Info.block(trial - 1)
             completedBlock = Info.block(trial - 1);
             fprintf('\n===== BREAK: Block %d complete =====\n\n', completedBlock);
+
+            % Save CSV at end of each block
+            writetable(Info, fullfile(participant_dir, ['GEO_View_', num2str(participant_id), '.csv']));
+
             break_text = sprintf([...
                 'Block %d abgeschlossen. Mach eine kurze Pause.\n\n' ...
                 'Denke daran: Drücke die LEERTASTE, wenn du eines dieser Bilder siehst.'], ...
                 completedBlock);
-            show_attn_check_demo(window, screen_cfg, cfg, trigger, break_text, 'Press SPACE to continue.');
+            show_attn_check_demo(window, screen_cfg, cfg, trigger, break_text, 'Drücke die LEERTASTE, um fortzufahren.');
 
             fix_color = [0 0 0];  % Reset feedback color at block boundary
         end
@@ -196,18 +200,19 @@ try
             trigger.drawTriggerPixel(cfg.triggers.key_press);
         end
         Screen('Flip', window, vbl + cfg.stim_dur);
-        Info.stim_offset(trial) = vbl + cfg.stim_dur;
+        Info.stim_offset(trial)   = vbl + cfg.stim_dur;
+        Info.stim_duration(trial) = Info.stim_offset(trial) - Info.stim_onset(trial);
 
         Screen('Close', ImgTex);
 
         %% -- Save after every trial --
         save(fullfile(participant_dir, Log.logfilename), 'Log');
-        save(fullfile(participant_dir, ['Info_', num2str(participant_id), '.mat']), 'Info');
+        save(fullfile(participant_dir, ['GEO_View_', num2str(participant_id), '.mat']), 'Info');
 
     end
 
     % Write final CSV
-    writetable(Info, fullfile(participant_dir, ['Info_', num2str(participant_id), '.csv']));
+    writetable(Info, fullfile(participant_dir, ['GEO_View_', num2str(participant_id), '.csv']));
 
     % Send experiment-end trigger
     trigger.sendTrigger(cfg.triggers.experiment_end);

@@ -24,11 +24,11 @@ cfg.participants_dir  = fullfile(cfg.experiment_root, 'Participants');
 cfg.path_to_table    = fullfile(cfg.stimuli_dir, 'stim_list.csv');
 cfg.stimuli_subfolder = 'stimuli_all';
 
-% Attention-check images (Set 2) — 3 bathroom images, manually chosen
+% Attention-check images (Set 2) — 3 images, manually chosen
 cfg.attn_check_images = {
     'img_nr8nj.png', 'img_zvi2m.png', 'img_0kqc0.png'};
 cfg.attn_check_category = 'Attention';
-cfg.attn_check_subfolder = 'stimuli_all';  % lives in Stimuli/stimuli_practise/Bathroom/
+cfg.attn_check_subfolder = 'stimuli_all';  
 
 %% Experiment settings
 
@@ -61,7 +61,7 @@ cfg.keys.respond  = KbName('space');  % press space to indicate repeating image
 
 %% Trigger settings
 cfg.triggers.enabled           = true;   % Set to false for debugging (no hardware)
-cfg.triggers.record_responses  = true;   % Set to false to skip key-press triggers
+cfg.triggers.record_responses  = false;   % Set to false to skip key-press triggers
 
 % Event triggers
 cfg.triggers.experiment_start = 1;

@@ -11,10 +11,10 @@ function show_attn_check_demo(window, screen_cfg, cfg, trigger, header_text, foo
 %   trigger     - ViewPixxTrigger object
 %   header_text - Instruction / reminder string shown above the images
 %   footer_text - (optional) Prompt shown below the images.
-%                 Defaults to 'Press SPACE to begin.'
+%                 Defaults to 'Drücke die LEERTASTE, um zu beginnen.'
 
 if nargin < 6 || isempty(footer_text)
-    footer_text = 'Press SPACE to begin.';
+    footer_text = 'Drücke die LEERTASTE, um zu beginnen.';
 end
 
 n_imgs   = length(cfg.attn_check_images);
