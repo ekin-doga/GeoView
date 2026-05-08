@@ -35,7 +35,18 @@ cfg = get_cfg(participant_id);
 
 [screen_cfg, window] = set_screen(1, 1, cfg.vdist);
 
-Screen('Preference', 'SkipSyncTests', 1);
+Screen('Preference', 'SkipSyncTests', 0);
+
+answer = 0;
+while answer == 0
+    r = input('Did you start EEG recording? [y] ', 's');
+    if strcmpi(r, 'y')
+        disp('EEG recording confirmed. Starting experiment.')
+        answer = 1;
+    else
+        disp('Please start the EEG recording and press y to continue.')
+    end
+end
 
 %----------------------------------------------------------------------
 % Trigger setup
